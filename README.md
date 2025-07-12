@@ -127,6 +127,43 @@ const files = [
 - `language` 推荐填写以获得更好的语法高亮。
 - `readOnly` 为 `true` 时不可编辑。
 
+## 公共方法：buildFileTree
+
+`buildFileTree` 是一个用于将扁平的文件路径对象自动转换为树状结构的工具函数，便于配合 <CodeEditor /> 组件渲染多级目录。
+
+### 用途
+- 将如下格式的对象：
+
+```js
+const fileMap = {
+  'hello.ts': '...代码...',
+  'src/index.tsx': '...代码...',
+  'docs/readme.md': '...内容...'
+}
+```
+
+- 自动转换为 <CodeEditor /> 组件所需的树状结构：
+
+```js
+import { buildFileTree } from './utils/fileTree';
+
+const files = buildFileTree(fileMap);
+<CodeEditor files={files} />
+```
+
+### 参数说明
+- `fileMap: Record<string, string>`  
+  键为文件路径（支持多级目录），值为文件内容。
+- 返回值：`FileItem[]`  
+  树状结构的文件/文件夹数组，可直接传递给 <CodeEditor />。
+
+### 特点
+- 自动识别多级目录，生成嵌套 children
+- 文件夹始终排在文件前面，且同类型按名称排序
+- 适合任何需要文件树结构的场景
+
+---
+
 ## 贡献
 
 欢迎提 Issue 或 PR 参与贡献！
