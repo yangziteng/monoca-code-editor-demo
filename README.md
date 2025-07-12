@@ -1,5 +1,6 @@
 # 代码编辑器演示（Code Editor Demo）
 
+![项目界面预览](./images/preview.jpg)
 这是一个基于 React + Monaco Editor 的多文件、多目录结构代码编辑器演示项目。支持文件夹嵌套、文件内容编辑、主题切换、文件搜索等功能，适合用作在线代码演示、教学或二次开发。
 
 ## 特性
@@ -63,6 +64,68 @@ yarn dev
 ## 如何自定义文件结构
 
 只需在 `src/App.tsx` 的 `fileMap` 中添加或修改文件路径和内容，支持多级目录（如 `src/utils/helper.ts`），会自动渲染为树状结构。
+
+## <CodeEditor /> 组件用法
+
+`CodeEditor` 是本项目的核心组件，用于渲染多文件/多目录的代码编辑界面。
+
+### Props
+
+| 名称      | 类型         | 说明                       |
+| --------- | ------------ | -------------------------- |
+| files     | FileItem[]   | 文件树结构，支持嵌套文件夹 |
+| readOnly  | boolean      | 是否只读（可选，默认true） |
+
+#### FileItem 结构
+
+```ts
+interface FileItem {
+  id: string;
+  name: string;
+  type: 'file' | 'folder';
+  content?: string;      // 仅文件有
+  language?: string;     // 仅文件有
+  children?: FileItem[]; // 仅文件夹有
+}
+```
+
+### 示例
+
+```tsx
+import CodeEditor from './components/CodeEditor';
+
+const files = [
+  {
+    id: '1',
+    name: 'src',
+    type: 'folder',
+    children: [
+      {
+        id: '2',
+        name: 'index.tsx',
+        type: 'file',
+        content: "export const index = () => 'index';",
+        language: 'typescript',
+      },
+    ],
+  },
+  {
+    id: '3',
+    name: 'readme.md',
+    type: 'file',
+    content: '# 示例',
+    language: 'markdown',
+  },
+];
+
+<CodeEditor files={files} readOnly={false} />
+```
+
+### 注意事项
+- `files` 必须为树状结构，文件夹的 `children` 为其子文件/文件夹。
+- `id` 必须唯一。
+- `language` 推荐填写以获得更好的语法高亮。
+- `readOnly` 为 `true` 时不可编辑。
 
 ## 贡献
 
